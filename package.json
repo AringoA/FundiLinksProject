@@ -1,14 +1,30 @@
 {
   "name": "fundilinks-project",
   "version": "1.1.0",
-  "description": "Kenya's fastest way to find casual work, nearby.",
-  "homepage": "https://github.com/AringoA/FundiLinks#readme",
-  "bugs": { "url": "https://github.com/AringoA/FundiLinks/issues" },
-  "repository": { "type": "git", "url": "git+https://github.com/AringoA/FundiLinks.git" },
+  "description": "A web app and API connecting Kenyan employers with nearby casual workers.",
+  "homepage": "https://github.com/AringoA/FundiLinksProject#readme",
+  "bugs": {
+    "url": "https://github.com/AringoA/FundiLinksProject/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AringoA/FundiLinksProject.git"
+  },
   "license": "ISC",
   "type": "commonjs",
   "main": "app.js",
-  "scripts": { "start": "node routes.js", "test": "jest --runInBand", "test:watch": "jest --watch", "serve:web": "http-server . -p 8080" },
-  "dependencies": { "express": "^4.21.2" },
-  "devDependencies": { "jest": "^29.7.0", "supertest": "^7.1.1", "http-server": "^14.1.1" }
+  "scripts": {
+    "start": "node routes.js",
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch",
+    "serve:web": "http-server . -p 8080"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.1.1",
+    "http-server": "^14.1.1"
+  }
 }
