@@ -149,6 +149,9 @@ function createApp({ dbPath = DEFAULT_DB } = {}) {
   });
   app.delete("/api/applications/:applicationId", (req, res) => cancelApplication(read(), req.params.applicationId, res));
 
+  // Keep unmatched URLs in the same JSON error format as other API failures.
+  app.use((req, res) => fail(res, 404, `Route not found: ${req.method} ${req.originalUrl}`));
+
   app.use((err, req, res, next) => {
     if (err instanceof SyntaxError && Object.prototype.hasOwnProperty.call(err, "body")) return fail(res, 400, "Request body must contain valid JSON");
     console.error(err); return fail(res, 500, "Internal server error");
