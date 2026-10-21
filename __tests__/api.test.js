@@ -54,6 +54,7 @@ describe("Application contract", () => {
     expect(stream.status).toBe(200); expect(stream.headers["content-type"]).toMatch(/text\/event-stream/);
     expect(stream.text).toContain("event: status"); expect(stream.text).toContain('"applicationId":"app-1"');
     expect((await request(app).get("/api/applications/nope/status")).status).toBe(404);
+    expect((await request(app).get("/api/applications/nope/subscribe")).status).toBe(404);
   });
   test("PUT is repeatable, validates, and returns 404 for missing IDs", async () => {
     const body = { jobId: "job-1", workerId: "worker-1", workerName: "Test Worker", note: "Rescheduled" };
@@ -83,5 +84,15 @@ describe("Existing browser routes", () => {
     expect((await request(app).post("/jobs").send(body)).status).toBe(400);
     const created = await request(app).post("/jobs").send({ ...body, pay: 500 });
     expect(created.status).toBe(201); expect(created.body.pay).toBe(500);
+  });
+});
+
+
+describe("Error contract", () => {
+  test("unknown routes return a JSON 404 response", async () => {
+    const res = await request(app).get("/api/does-not-exist");
+    expect(res.status).toBe(404);
+    expect(res.headers["content-type"]).toMatch(/application\/json/);
+    expect(res.body.message).toBe("Route not found: GET /api/does-not-exist");
   });
 });
