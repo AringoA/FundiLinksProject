@@ -80,7 +80,16 @@ paths:
               schema: { $ref: '#/components/schemas/Application' }
         '400': { $ref: '#/components/responses/BadRequest' }
         '404': { $ref: '#/components/responses/NotFound' }
-        '409': { description: Job is unavailable or worker already applied }
+        '409':
+          description: Job is unavailable or worker already applied
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+              examples:
+                unavailable:
+                  value: { message: 'This job is no longer available' }
+                duplicate:
+                  value: { message: 'You have already applied for this job' }
   /api/applications/{applicationId}:
     parameters:
       - name: applicationId
@@ -103,13 +112,23 @@ paths:
               schema: { $ref: '#/components/schemas/Application' }
         '400': { $ref: '#/components/responses/BadRequest' }
         '404': { $ref: '#/components/responses/NotFound' }
-        '409': { description: Only pending applications may be updated }
+        '409':
+          description: Only pending applications may be updated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+              example: { message: 'Only pending applications can be updated' }
     delete:
       summary: Cancel a pending application
       responses:
         '204': { description: Application cancelled; response has no body }
         '404': { $ref: '#/components/responses/NotFound' }
-        '409': { description: Only pending applications may be cancelled }
+        '409':
+          description: Only pending applications may be cancelled
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+              example: { message: 'Only pending applications can be cancelled' }
   /api/applications/{applicationId}/status:
     get:
       summary: Return current application status
@@ -134,7 +153,7 @@ paths:
         '404': { $ref: '#/components/responses/NotFound' }
   /api/applications/{applicationId}/subscribe:
     get:
-      summary: Receive a server-sent event with the latest application status snapshot
+      summary: Receive a one-time server-sent event with the current application status snapshot
       parameters:
         - name: applicationId
           in: path
@@ -143,10 +162,16 @@ paths:
           example: app-123
       responses:
         '200':
-          description: SSE response containing an initial status event
+          description: Sends one initial status event and then closes the connection. This is a snapshot, not a persistent stream of later status changes.
           content:
             text/event-stream:
-              schema: { type: string, example: "event: status\ndata: {applicationId: app-123, status: pending, updatedAt: 2026-10-13T09:15:00.000Z}\n\n" }
+              schema:
+                type: string
+                example: |
+                  event: status
+                  data: {"applicationId":"app-123","status":"pending","updatedAt":"2026-10-13T09:15:00.000Z"}
+
+
         '404': { $ref: '#/components/responses/NotFound' }
 components:
   parameters:
